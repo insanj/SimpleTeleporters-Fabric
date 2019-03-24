@@ -74,10 +74,21 @@ public class TeleporterBlock extends BlockWithEntity
 
 						splayer.networkHandler.teleportRequest(teleporterPos.getX() + 0.5, teleporterPos.getY(), teleporterPos.getZ() + 0.5, entity.yaw, entity.pitch, EnumSet.noneOf(net.minecraft.client.network.packet.PlayerPositionLookS2CPacket.Flag.class));
 
-						splayer.addVelocity(0, 0.5, 0); // originally just a velocityY =
+						splayer.setVelocity(0, 0.5, 0); // originally just a velocityY =
 						splayer.velocityDirty = true; // maybe scheduleVelocityUpdate ?
 
 						splayer.playSound(SoundEvents.ENTITY_ENDERMAN_TELEPORT, 1.0F, 1.0F);
+				} else if (entity instanceof PlayerEntity) {
+					BlockPos teleporterPos = teleporter.getTeleportPosition();
+					PlayerEntity cplayer = (PlayerEntity) entity;
+
+					cplayer.velocityModified = true;
+					cplayer.setLocationAndAngles(teleporterPos.getX() + 0.5, teleporterPos.getY(), teleporterPos.getZ() + 0.5, entity.yaw, entity.pitch);
+					cplayer.setPositionAnglesAndUpdate(teleporterPos.getX() + 0.5, teleporterPos.getY(), teleporterPos.getZ() + 0.5, entity.yaw, entity.pitch);
+					cplayer.setVelocity(0, 0.5, 0);
+					cplayer.velocityDirty = true;
+
+					cplayer.playSound(SoundEvents.ENTITY_ENDERMAN_TELEPORT, 1.0F, 1.0F);
 				}
 			}
 		}
